@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function(){
         divs.getElementsByTagName('div')[i].classList.add("square");
     }
 
-    boardStats = [
+    var boardStats = [
         '', '','',
         '', '', '',
         '', '', ''
@@ -15,33 +15,45 @@ document.addEventListener("DOMContentLoaded", function(){
     const gridCells = document.querySelector('#board').children;
     const newGame = document.getElementsByClassName('btn');
     var isFull = 0;
+    var winner = '';
 
     xTurn = X_Class;
 
+    newGame[0].addEventListener('click', startGame, false);
+    
     startGame();
-
-    newGame.addEventListener('click', startGame);
     
     function startGame(){
         setHover();
+        winner = '';
+        boardStats = [
+            '', '','',
+            '', '', '',
+            '', '', ''
+        ];
+        xTurn = X_Class;
+        isFull = 0;
         for (var i=0; i<gridCells.length;i++){
+            gridCells[i].innerHTML = '';
             gridCells[i].classList.remove(X_Class);
             gridCells[i].classList.remove(O_Class);
-            gridCells[i].removeEventListener('click', handleClick);
             gridCells[i].addEventListener('click', handleClick, {once:true});
         }
-        newGame.innerHTML = "Move your mouse over a square and click to play an X or an O.";
+        document.getElementById("status").classList.remove('you-won');
+        document.getElementById("status").innerHTML = "Move your mouse over a square and click to play an X or an O.";
     }
     
 
     function handleClick(e){
-        const gridCell = e.target;
-        const currentClass = xTurn ? X_Class : O_Class;
-        placeXoO (gridCell, currentClass);
-        isFull ++;
-        nextTurn();
-        setHover();
-        isWinner(currentClass);
+        if (winner == ''){
+            const gridCell = e.target;
+            const currentClass = xTurn ? X_Class : O_Class;
+            placeXoO (gridCell, currentClass);
+            isFull ++;
+            nextTurn();
+            setHover();
+            isWinner(currentClass);
+        }
     }
 
     function placeXoO(gridCell,currentClass, e){
@@ -87,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function(){
             winner = currentClass;
         } else if (boardStats[0] == 'X' && boardStats[3] == 'X' && boardStats[6] == 'X' || boardStats[0] == 'O' && boardStats[3] == 'O' && boardStats[6] == 'O'){
             winner = currentClass;
-        } else if (boardStats[1] == 'X' && boardStats[4] == 'X' && boardStats[7] == 'X' || boardStats[1] == 'O' && boardStats[4] == 'O' && boardStats[27] == 'O'){
+        } else if (boardStats[1] == 'X' && boardStats[4] == 'X' && boardStats[7] == 'X' || boardStats[1] == 'O' && boardStats[4] == 'O' && boardStats[7] == 'O'){
             winner = currentClass;
         } else if (boardStats[2] == 'X' && boardStats[5] == 'X' && boardStats[8] == 'X' || boardStats[2] == 'O' && boardStats[5] == 'O' && boardStats[8] == 'O'){
             winner = currentClass;
@@ -96,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function(){
         } else if (boardStats[2] == 'X' && boardStats[4] == 'X' && boardStats[6] == 'X' || boardStats[2] == 'O' && boardStats[4] == 'O' &&boardStats[6] == 'O'){
             winner = currentClass;
         } else if (winner = ''){
-            return winner;
+            return '';
         } else if (isFull == 9){
             winner = "draw";
         }

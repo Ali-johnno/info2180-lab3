@@ -13,30 +13,46 @@ document.addEventListener("DOMContentLoaded", function(){
     const X_Class = 'X';
     const O_Class = 'O';
     const gridCells = document.querySelector('#board').children;
-    var index = 0;
+    const newGame = document.getElementsByClassName('btn');
+    var isFull = 0;
 
     xTurn = X_Class;
 
-    for (var i=0; i<gridCells.length;i++){
-        gridCells[i].addEventListener('click', handleClick, {once:true});
+    startGame();
+
+    newGame.addEventListener('click', startGame);
+    
+    function startGame(){
+        setHover();
+        for (var i=0; i<gridCells.length;i++){
+            gridCells[i].classList.remove(X_Class);
+            gridCells[i].classList.remove(O_Class);
+            gridCells[i].removeEventListener('click', handleClick);
+            gridCells[i].addEventListener('click', handleClick, {once:true});
+        }
+        newGame.innerHTML = "Move your mouse over a square and click to play an X or an O.";
     }
+    
 
     function handleClick(e){
         const gridCell = e.target;
         const currentClass = xTurn ? X_Class : O_Class;
         placeXoO (gridCell, currentClass);
-        index ++;
+        isFull ++;
         nextTurn();
         setHover();
+        isWinner(currentClass);
     }
 
-    function placeXoO(gridCell,currentClass){
+    function placeXoO(gridCell,currentClass, e){
+        var squareIndexes = Array.prototype.slice.call(gridCells); 
+        var squareIndex = squareIndexes.indexOf(gridCell);
         if (currentClass == X_Class){
             gridCell.innerHTML = 'X';
-            boardStats[index] = 'X';
+            boardStats[squareIndex] = 'X';
         } else {
             gridCell.innerHTML = 'O';
-            boardStats[index] = 'O';
+            boardStats[squareIndex] = 'O';
         }
         gridCell.classList.add(currentClass);
     }
@@ -61,5 +77,45 @@ document.addEventListener("DOMContentLoaded", function(){
         targ.classList.remove("hover");
         targ.classList.add("square");
     }
+
+    function isWinner(currentClass){
+        if (boardStats[0] == 'X' && boardStats[1] == 'X' && boardStats[2] == 'X' || boardStats[0] == 'O'&& boardStats[1] == 'O' && boardStats[2] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[3] == 'X' && boardStats[4] == 'X' && boardStats[5] == 'X' || boardStats[3] == 'O' && boardStats[4] == 'O' && boardStats[5] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[6] == 'X' && boardStats[7] == 'X' && boardStats[8] == 'X' || boardStats[6] == 'O' && boardStats[7] == 'O' && boardStats[8] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[0] == 'X' && boardStats[3] == 'X' && boardStats[6] == 'X' || boardStats[0] == 'O' && boardStats[3] == 'O' && boardStats[6] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[1] == 'X' && boardStats[4] == 'X' && boardStats[7] == 'X' || boardStats[1] == 'O' && boardStats[4] == 'O' && boardStats[27] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[2] == 'X' && boardStats[5] == 'X' && boardStats[8] == 'X' || boardStats[2] == 'O' && boardStats[5] == 'O' && boardStats[8] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[0] == 'X' && boardStats[4] == 'X' && boardStats[8] == 'X' || boardStats[0] == 'O' && boardStats[4] == 'O' && boardStats[8] == 'O'){
+            winner = currentClass;
+        } else if (boardStats[2] == 'X' && boardStats[4] == 'X' && boardStats[6] == 'X' || boardStats[2] == 'O' && boardStats[4] == 'O' &&boardStats[6] == 'O'){
+            winner = currentClass;
+        } else if (winner = ''){
+            return winner;
+        } else if (isFull == 9){
+            winner = "draw";
+        }
+        setWinnerText(winner);
+    }
+
+    function setWinnerText (winner){
+        var statusText= document.getElementById("status");
+        if (winner == X_Class){
+            statusText.classList.add("you-won");
+            statusText.innerHTML = "Congratulations! X is the Winner!";
+        } else if (winner == O_Class){
+            statusText.classList.add("you-won");
+            statusText.innerHTML ="Congratulations! O is the Winner!";
+        } else if (winner == "draw"){
+            statusText.innerHTML = "DRAW";
+        }
+    }
+
+
 });
 

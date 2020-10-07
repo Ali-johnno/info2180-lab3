@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function(){
         placeXoO (gridCell, currentClass);
         index ++;
         nextTurn();
+        setHover();
     }
 
     function placeXoO(gridCell,currentClass){
@@ -42,6 +43,23 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function nextTurn (){
         xTurn = !xTurn;
+    }
+
+    function setHover(){
+        for (var i=0; i<gridCells.length;i++){
+            gridCells[i].addEventListener("mouseover", hover);
+            gridCells[i].addEventListener("mouseout", hoverFalse);
+        }
+    }
+
+    function hover(e){
+        e.target.classList.add('hover');
+    }
+
+    function hoverFalse(e){
+        const targ = e.target;
+        targ.classList.remove("hover");
+        targ.classList.add("square");
     }
 });
 

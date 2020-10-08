@@ -1,3 +1,4 @@
+"use strict";
 document.addEventListener("DOMContentLoaded", function(){
     var divs = document.getElementById("board");
     for (var i=0; i<9; i++){
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var isFull = 0;
     var winner = '';
 
-    xTurn = X_Class;
+    var xTurn = X_Class;
 
     newGame[0].addEventListener('click', startGame, false);
     
